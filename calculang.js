@@ -304,6 +304,13 @@ export const introspection = async (entrypoint, fs) => {
 
 
             CallExpression(path) {
+              // not using Functions or cul_functions, I guess because of sequencing?
+              // there can be e.g.   return keys_stream_function()().filter((d) => d.frame == f());
+              // I need ()() last call to return
+
+              if (path.node.arguments?.length == 0 && path.node.callee.name == undefined) return;
+
+
               // BUG ? getting multiple links in set for individual calls. These differ when negs differ
               // does neg logic need to apply over all?
               // i.e. some dupe links in graph that are invisible
