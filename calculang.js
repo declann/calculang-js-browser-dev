@@ -691,6 +691,8 @@ export const compile_new = (entrypoint, fs, introspection) => {
 
 }
 
+// TODO bring in fns_fromDefinition
+
 
 export const calls_fromDefinition = (introspection) => ([...introspection.cul_links].filter((d) => d.reason == "call" /* && !d.from.includes("undefined") ORDER GTEES NEEDED*/)
   .map((d) => ({
@@ -787,6 +789,11 @@ export const calls_fromDefinition = (introspection) => ([...introspection.cul_li
 // sourcemaps will break: need to merge 2x maps due to replacements
 export const bundleIntoOne = (compiled, introspection, memoize) => {
 
+  // memoize code
+  const inputs = [...introspection.cul_functions.values()].filter(d => d.reason == 'input definition').map(d => d.name).sort()
+  const formulae_not_inputs = [...introspection.cul_functions.values()].filter(d => d != "memo_hash" && d.reason == 'definition' && inputs.indexOf(d.name + '_in') == -1 && d.name.indexOf('function') == -1).map(d => d.name)
+  const has_memo_hash = introspection.cul_functions.has("0_memo_hash")
+
   const compiled2 = []
   const blobs = {}
 
@@ -850,7 +857,7 @@ export const bundleIntoOne = (compiled, introspection, memoize) => {
                 if (name == undefined) return;
 
                 if (introspection.cul_functions.has(input.cul_scope_id + '_' + name))
-                  path.parent.id.name = 's' + input.cul_scope_id + '_' + name + (memoize ? '$' : '')
+                  path.parent.id.name = 's' + input.cul_scope_id + '_' + name + ((memoize && formulae_not_inputs.includes(path.parent.id.name)) ? '$' : '')
               }
 
 
@@ -868,7 +875,7 @@ export const bundleIntoOne = (compiled, introspection, memoize) => {
 // only when memoize on TODO
   + (memoize ? ([...introspection.cul_functions.values()].filter(d => d.reason == 'definition' || d.reason == 'definition (renamed)').map(d => {
     const y = `({${[...introspection.cul_input_map.get(d.cul_scope_id+'_'+d.name)].join(', ')}})`;
-    return `export const s${d.cul_scope_id}_${d.name}$m = memoize(s${d.cul_scope_id}_${d.name}$, JSON.stringify);
+    return `export const s${d.cul_scope_id}_${d.name}$m = memoize(s${d.cul_scope_id}_${d.name}$, ${has_memo_hash ? "memo_hash$" : "JSON.stringify"});
 export const s${d.cul_scope_id}_${d.name} = ${y} => s${d.cul_scope_id}_${d.name}$m${y}`;
   }).join('\n\n')) + `
   // from https://cdn.jsdelivr.net/npm/underscore@1.13.6/underscore-esm.js
