@@ -872,8 +872,8 @@ export const bundleIntoOne = (compiled, introspection, memoize) => {
 
 
 
-// only when memoize on TODO
-  + (memoize ? ([...introspection.cul_functions.values()].filter(d => d.reason == 'definition' || d.reason == 'definition (renamed)').map(d => {
+// only when memoize on and not an input HACKY?
+  + (memoize ? ([...introspection.cul_functions.values()].filter(d => (d.reason == 'definition' || d.reason == 'definition (renamed)') && formulae_not_inputs.includes(d.name)).map(d => {
     const y = `({${[...introspection.cul_input_map.get(d.cul_scope_id+'_'+d.name)].join(', ')}})`;
     return `export const s${d.cul_scope_id}_${d.name}$m = memoize(s${d.cul_scope_id}_${d.name}$, ${has_memo_hash ? "memo_hash$" : "JSON.stringify"});
 export const s${d.cul_scope_id}_${d.name} = ${y} => s${d.cul_scope_id}_${d.name}$m${y}`;
