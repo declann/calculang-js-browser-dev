@@ -7,14 +7,14 @@
 // AWFUL, led to multiple unstable invalid module errors
 //import {require} from "npm:d3-require";
 
-import * as tidy from 'npm:@tidyjs/tidy'
+import * as tidy from 'https://cdn.jsdelivr.net/npm/npm:@tidyjs/tidy/+esm'
 
 // invalid module error some times ?!?!
 //let tidy = await require("@tidyjs/tidy@2.5.1/dist/umd/tidy.min.js")
 
 //cql = require('compassql')
 
-import * as cql from "npm:compassql";
+import * as cql from "https://cdn.jsdelivr.net/npm/compassql/+esm";
 
 
 //export const a = () => {console.log(tidy, cql)}
