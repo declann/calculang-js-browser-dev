@@ -460,7 +460,7 @@ export const introspection = async (entrypoint, fs) => {
           .includes(neg_in);
 
         result = other_edges
-          .map((d) => introspection.cul_input_map.get(d.value.from))
+          .map((d) => introspection.cul_input_map.get(d.value.from) ?? new Set([d.value.from]) /* because I removed inputs from cul_input_map, maybe confirm reason=='input'? */ )
           .reduce((a, v) => [...a, ...v], [])
           .includes(neg_in);
 
