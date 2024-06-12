@@ -903,9 +903,9 @@ function has$1(obj, key) {
   // is this approach better than fromDefinition type change ???? how reliable cul_source_scope_id for explicit imports?
 
   // ORDER IS IMPORTANT
-  + [...introspection.cul_functions.values()].sort((a,b) => b.cul_scope_id-a.cul_scope_id).filter(d => d.cul_scope_id != 0 && d.reason == 'explicit import').map(d => `export const s${d.cul_scope_id}_${d.name} = s${d.cul_source_scope_id}_${d.imported}`).join(";\n") + '\n\n\n'
+  + [...introspection.cul_functions.values()].sort((a,b) => b.cul_scope_id-a.cul_scope_id).filter(d => d.cul_scope_id != 0 && (d.reason == 'explicit import' || d.reason == 'explicit import (renamed)')).map(d => `export const s${d.cul_scope_id}_${d.name} = s${d.cul_source_scope_id}_${d.imported}`).join(";\n") + '\n\n\n'
 
-  + [...introspection.cul_functions.values()].filter(d => d.cul_scope_id == 0 && d.reason == 'explicit import').map(d => `export const ${d.name} = s${d.cul_source_scope_id}_${d.imported}`).join(";\n") + '\n\n\n'
+  + [...introspection.cul_functions.values()].filter(d => d.cul_scope_id == 0 && (d.reason == 'explicit import' || d.reason == 'explicit import (renamed)')).map(d => `export const ${d.name} = s${d.cul_source_scope_id}_${d.imported}`).join(";\n") + '\n\n\n'
 
 
 + "\n\n\n\n////////// defaults: ////\n\n"
