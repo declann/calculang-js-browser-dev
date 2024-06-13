@@ -52,14 +52,12 @@ export const introspection = async (entrypoint, fs) => {
 
     let next = []; // next imports to traverse
 
-    console.log('entrypoint: ', entrypoint)
 
     // pass to know order to traverse.
     // must be own pass because introspection shouldn't process a scope
     // without previous scopes being complete.
     // ex-Webpack ensured this
     let code = fs ? fs[entrypoint] : await (await fetch(entrypoint)).text();
-    console.log('CODE', code)
 
     Babel.transform(code, {
       plugins: [
@@ -912,8 +910,6 @@ function has$1(obj, key) {
     + [...introspection.cul_functions.values()].filter(d => d.cul_scope_id == 0 && d.reason == 'definition').map(d => `export const ${d.name} = s0_${d.name}`).join(";\n") + '\n\n\n'
 
     
-// todo exclude inputs
-console.log('MEMOIZE THIS?', [...introspection.cul_functions.values()].filter(d => d.reason == 'definition'))
 
 
   return out;
