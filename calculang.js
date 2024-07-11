@@ -916,4 +916,21 @@ function has$1(obj, key) {
 
 }
 
-
+// fs are the only contents the compiler can read
+// remote URLs won't be fetched (yet)
+// instead: fetch them in code that calls compile
+export const compile = async ({entrypoint, fs, memo = true}) => {
+  const introspection = await getIntrospection(entrypoint, fs);
+  const compiled = await compile_new(entrypoint, fs, introspection);
+  const bundle = bundleIntoOne(compiled, introspection, memo);
+  
+  const u = URL.createObjectURL(new Blob([bundle], { type: "text/javascript" }))
+  console.log(`creating ${u}`)
+  
+  const model = await import(u)
+  
+  return {
+    introspection,
+    js: model
+  }
+}
