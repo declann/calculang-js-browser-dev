@@ -920,9 +920,9 @@ function has$1(obj, key) {
 // remote URLs won't be fetched (yet)
 // instead: fetch them in code that calls compile
 export const compile = async ({entrypoint, fs, memo = true}) => {
-  const introspection = await getIntrospection(entrypoint, fs);
-  const compiled = await compile_new(entrypoint, fs, introspection);
-  const bundle = bundleIntoOne(compiled, introspection, memo);
+  const introspection_a = await introspection(entrypoint, fs);
+  const compiled = await compile_new(entrypoint, fs, introspection_a);
+  const bundle = bundleIntoOne(compiled, introspection_a, memo);
   
   const u = URL.createObjectURL(new Blob([bundle], { type: "text/javascript" }))
   console.log(`creating ${u}`)
@@ -930,7 +930,7 @@ export const compile = async ({entrypoint, fs, memo = true}) => {
   const model = await import(u)
   
   return {
-    introspection,
+    introspection: introspection_a,
     js: model
   }
 }
