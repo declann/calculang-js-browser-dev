@@ -14,7 +14,7 @@
 //import {require} from "https://cdn.jsdelivr.net/npm/d3-require/+esm";
 
 //import * as Babel from 'https://unpkg.com/@babel/standalone/babel.js';
-import * as Babel from 'https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/+esm'
+import * as Babel from 'https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.10/+esm' // moved to latest 26/6, still pinning
 //const Babel = await require("@babel/standalone")
 
 
